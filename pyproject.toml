@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=70"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iagocava-genshin-dev-suite"
+version = "0.1.0"
+description = "Modular development suite for Genshin Impact tools and creator workflows."
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    { name = "Iago Cavalcante" }
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.8"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
