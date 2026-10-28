@@ -1,7 +1,7 @@
 # IagoCava Genshin Dev Suite — Arquivo Mestre de Continuidade
 
-**Versão:** 1.0  
-**Data-base:** 26/10/2026  
+**Versão:** 1.1  
+**Data-base:** 27/10/2026  
 **Finalidade:** este é o arquivo canônico para retomar o projeto em qualquer novo chat, computador ou sessão de desenvolvimento.
 
 ---
@@ -248,16 +248,17 @@ iagocava-genshin-dev-suite/
 
 ### Entregas
 
-- [ ] Criar repositório Git.
-- [ ] Criar ambiente virtual.
-- [ ] Criar estrutura de diretórios.
-- [ ] Criar `pyproject.toml`.
-- [ ] Configurar `pytest`.
-- [ ] Configurar `ruff`.
-- [ ] Criar `.gitignore`.
-- [ ] Criar README inicial.
-- [ ] Criar pacote `core`.
-- [ ] Fazer primeiro commit.
+- [x] Criar repositório Git.
+- [x] Criar ambiente virtual.
+- [x] Criar estrutura de diretórios.
+- [x] Criar `pyproject.toml`.
+- [x] Configurar `pytest`.
+- [x] Configurar `ruff`.
+- [x] Criar `.gitignore`.
+- [x] Criar README inicial.
+- [x] Criar pacote `core`.
+- [x] Fazer primeiro commit.
+- [x] Publicar o repositório no GitHub (`iagocava/iagocava-genshin-dev-suite`).
 
 ### Definition of Done
 
@@ -636,11 +637,11 @@ Não criar branches demais enquanto o projeto ainda for pequeno.
 > ESTA SEÇÃO DEVE SER ATUALIZADA EM TODA SESSÃO.
 
 **Projeto atual:** Projeto 1 — Genshin Pull Calculator  
-**Etapa:** Planejamento / Fundação  
-**Status:** NÃO INICIADO  
-**Branch:** ainda não criada  
-**Último commit:** nenhum  
-**Versão funcional atual:** nenhuma
+**Etapa:** Início do desenvolvimento funcional  
+**Status:** PRONTO PARA IMPLEMENTAÇÃO  
+**Branch atual publicada:** `main`  
+**Último commit validado antes desta sincronização:** `2d54f24` — `docs: add project roadmap and session tracking`  
+**Versão funcional atual:** fundação técnica `0.1.0`; funcionalidades do Pull Calculator ainda não implementadas
 
 ### Já concluído
 
@@ -648,14 +649,34 @@ Não criar branches demais enquanto o projeto ainda for pequeno.
 - [x] Escolha de Python como linguagem principal.
 - [x] Definição de arquitetura modular.
 - [x] Definição da estratégia de reutilização.
+- [x] Instalação e configuração do ambiente Python/VS Code.
+- [x] Criação e ativação do ambiente virtual `.venv`.
+- [x] Inicialização do Git e branch `main`.
+- [x] Criação da estrutura modular `src/iagocava_genshin`.
+- [x] Configuração do `pyproject.toml`.
+- [x] Configuração e validação de `pytest`.
+- [x] Configuração e validação de Ruff.
+- [x] Criação do `.gitignore`.
+- [x] Criação do pacote `core`.
+- [x] Primeiro commit da fundação (`4563c5f`).
+- [x] Publicação no GitHub.
+- [x] Commit da documentação/roadmap (`2d54f24`).
 
 ### Em andamento
 
-- [ ] Preparar ambiente de desenvolvimento.
+- [ ] Iniciar a implementação do Projeto 1 — Genshin Pull Calculator.
 
 ### Próxima tarefa exata
 
-**Executar a Fase 0: criar o repositório, ambiente Python e estrutura inicial de diretórios.**
+**Criar a branch `feature/pull-calculator` e implementar no `core/currency` a conversão reutilizável de primogemas e Destinos Entrelaçados em pulls, acompanhada de testes unitários.**
+
+Regras iniciais a representar no código:
+
+- `160` primogemas = `1` pull;
+- `1` Destino Entrelaçado = `1` pull;
+- a lógica deve permanecer independente da CLI/Streamlit;
+- entradas inválidas ou negativas devem receber tratamento explícito;
+- executar `pytest`, `ruff check .` e `ruff format --check .` antes do commit.
 
 ### Bloqueios
 
@@ -665,24 +686,37 @@ Nenhum.
 
 # 19. ÚLTIMA SESSÃO
 
-**Data:** 26/10/2026
+**Data:** 27/10/2026
 
-## Foi decidido
+## Objetivo
 
-- O ecossistema será construído em sequência.
-- Python será a linguagem principal.
-- C++ poderá ser integrado posteriormente em componentes de alto desempenho.
-- O código será organizado para reutilização.
-- O Projeto 1 será o Genshin Pull Calculator.
-- Haverá um único pacote compartilhado de regras (`core`).
+Sincronizar o arquivo mestre de continuidade com o estado real do repositório publicado no GitHub.
 
-## Código alterado
+## Concluído
 
-Nenhum.
+- Repositório `iagocava/iagocava-genshin-dev-suite` confirmado como público.
+- Branch padrão `main` confirmada.
+- Commit `4563c5f` confirmado como fundação técnica do projeto.
+- Commit `2d54f24` confirmado como publicação da documentação e roadmap.
+- Estrutura `src/iagocava_genshin/{apps,core,shared}` confirmada.
+- Teste inicial `tests/unit/test_package.py` confirmado.
+- Fase 0 reclassificada como concluída.
+- Próxima etapa definida como implementação funcional do Pull Calculator.
+
+## Arquivos alterados
+
+- `PROJECT_MASTER.md`
+- `docs/SESSION_LOG.md`
+
+## Decisões técnicas
+
+- Manter a arquitetura monorepo modular já definida.
+- Implementar primeiro a lógica de moedas/pulls no `core`, sem dependência da interface.
+- Utilizar uma branch de feature para o primeiro módulo funcional.
 
 ## Próxima sessão
 
-Começar pela **Fase 0 — Fundação do repositório**.
+Criar `feature/pull-calculator` e implementar a primeira função reutilizável de conversão de recursos em pulls, com testes unitários.
 
 ---
 
