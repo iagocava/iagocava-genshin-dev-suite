@@ -21,6 +21,8 @@ def test_calculate_pull_summary() -> None:
         intertwined_fates=27,
         banner_state=state,
         character_goal=goal,
+        simulations=1_000,
+        seed=42,
     )
 
     assert summary.total_pulls == 267
@@ -33,6 +35,7 @@ def test_calculate_pull_summary() -> None:
     assert summary.total_copies_required == 3
     assert summary.copies_owned == 0
     assert summary.copies_needed == 3
+    assert 0.0 <= summary.goal_success_probability <= 1.0
 
 
 def test_calculate_pull_summary_with_guarantee() -> None:
@@ -51,6 +54,8 @@ def test_calculate_pull_summary_with_guarantee() -> None:
         intertwined_fates=5,
         banner_state=state,
         character_goal=goal,
+        simulations=1_000,
+        seed=42,
     )
 
     assert summary.total_pulls == 15
@@ -63,3 +68,28 @@ def test_calculate_pull_summary_with_guarantee() -> None:
     assert summary.total_copies_required == 3
     assert summary.copies_owned == 1
     assert summary.copies_needed == 2
+    assert 0.0 <= summary.goal_success_probability <= 1.0
+
+
+def test_completed_goal_has_certain_success_probability() -> None:
+    state = BannerState(
+        current_pity=0,
+        is_guaranteed=False,
+    )
+
+    goal = CharacterGoal(
+        target_constellation=0,
+        copies_owned=1,
+    )
+
+    summary = calculate_pull_summary(
+        primogems=0,
+        intertwined_fates=0,
+        banner_state=state,
+        character_goal=goal,
+        simulations=100,
+        seed=42,
+    )
+
+    assert summary.copies_needed == 0
+    assert summary.goal_success_probability == 1.0
