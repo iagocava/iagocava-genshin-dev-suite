@@ -3,6 +3,7 @@ from unittest.mock import patch
 from iagocava_genshin.apps.pull_calculator.cli import (
     ask_constellation,
     ask_guaranteed,
+    ask_integer_in_range,
     ask_non_negative_integer,
 )
 
@@ -45,3 +46,33 @@ def test_ask_guaranteed_accepts_no() -> None:
 def test_ask_guaranteed_retries_invalid_answer() -> None:
     with patch("builtins.input", side_effect=["talvez", "s"]):
         assert ask_guaranteed() is True
+
+
+def test_range_accepts_minimum() -> None:
+    with patch("builtins.input", return_value="0"):
+        assert ask_integer_in_range("Pity: ", 0, 89) == 0
+
+
+def test_range_accepts_maximum() -> None:
+    with patch("builtins.input", return_value="89"):
+        assert ask_integer_in_range("Pity: ", 0, 89) == 89
+
+
+def test_range_rejects_negative() -> None:
+    with patch("builtins.input", side_effect=["-1", "50"]):
+        assert ask_integer_in_range("Pity: ", 0, 89) == 50
+
+
+def test_range_rejects_above_maximum() -> None:
+    with patch("builtins.input", side_effect=["90", "75"]):
+        assert ask_integer_in_range("Pity: ", 0, 89) == 75
+
+
+def test_range_rejects_invalid_text() -> None:
+    with patch("builtins.input", side_effect=["abc", "25"]):
+        assert ask_integer_in_range("Pity: ", 0, 89) == 25
+
+
+def test_copies_range() -> None:
+    with patch("builtins.input", side_effect=["8", "7"]):
+        assert ask_integer_in_range("Cópias: ", 0, 7) == 7

@@ -40,6 +40,30 @@ def ask_guaranteed() -> bool:
         print("Digite apenas 's' para sim ou 'n' para não.")
 
 
+def ask_integer_in_range(
+    prompt: str,
+    minimum: int,
+    maximum: int,
+) -> int:
+    """Solicita um inteiro dentro de um intervalo permitido."""
+    if minimum > maximum:
+        raise ValueError("O limite mínimo não pode superar o máximo.")
+
+    while True:
+        raw_value = input(prompt).strip()
+
+        try:
+            value = int(raw_value)
+        except ValueError:
+            print("Erro: digite um número inteiro válido.")
+            continue
+
+        if minimum <= value <= maximum:
+            return value
+
+        print(f"Erro: informe um número entre {minimum} e {maximum}.")
+
+
 def main() -> None:
     print()
     print("=== IagoCava Genshin Pull Calculator ===")
@@ -47,10 +71,19 @@ def main() -> None:
 
     primogems = ask_non_negative_integer("Primogemas disponíveis: ")
     intertwined_fates = ask_non_negative_integer("Destinos Entrelaçados disponíveis: ")
-    current_pity = ask_non_negative_integer("Pity atual: ")
+    current_pity = ask_integer_in_range(
+        "Pity atual (0 a 89): ",
+        0,
+        89,
+    )
+
     is_guaranteed = ask_guaranteed()
     target_constellation = ask_constellation()
-    copies_owned = ask_non_negative_integer("Cópias do personagem já possuídas: ")
+    copies_owned = ask_integer_in_range(
+        "Cópias do personagem já possuídas (0 a 7): ",
+        0,
+        7,
+    )
 
     try:
         banner_state = BannerState(
