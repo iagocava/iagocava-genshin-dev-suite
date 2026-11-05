@@ -1,5 +1,8 @@
+from unittest.mock import patch
+
 import pytest
 
+from iagocava_genshin.apps.pull_calculator.cli import ask_constellation
 from iagocava_genshin.core.calculator import calculate_pull_summary
 from iagocava_genshin.core.models import CharacterGoal
 from iagocava_genshin.core.pity import BannerState
@@ -80,6 +83,63 @@ def test_completed_goal_has_certain_success_probability() -> None:
     goal = CharacterGoal(
         target_constellation=0,
         copies_owned=1,
+    )
+
+    summary = calculate_pull_summary(
+        primogems=0,
+        intertwined_fates=0,
+        banner_state=state,
+        character_goal=goal,
+        simulations=100,
+        seed=42,
+    )
+
+    assert summary.copies_needed == 0
+    assert summary.goal_success_probability == 1.0
+
+
+def test_constellation_retries_multiple_invalid_values() -> None:
+    with patch(
+        "builtins.input",
+        side_effect=["-1", "abc", "7", "6"],
+    ):
+        assert ask_constellation() == 6
+
+
+def test_c6_with_six_copies_and_zero_pulls() -> None:
+    state = BannerState(
+        current_pity=0,
+        is_guaranteed=False,
+    )
+
+    goal = CharacterGoal(
+        target_constellation=6,
+        copies_owned=6,
+    )
+
+    summary = calculate_pull_summary(
+        primogems=0,
+        intertwined_fates=0,
+        banner_state=state,
+        character_goal=goal,
+        simulations=100,
+        seed=42,
+    )
+
+    assert summary.total_copies_required == 7
+    assert summary.copies_needed == 1
+    assert summary.goal_success_probability == 0.0
+
+
+def test_goal_already_exceeded() -> None:
+    state = BannerState(
+        current_pity=0,
+        is_guaranteed=False,
+    )
+
+    goal = CharacterGoal(
+        target_constellation=1,
+        copies_owned=3,
     )
 
     summary = calculate_pull_summary(

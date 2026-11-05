@@ -76,3 +76,11 @@ def test_range_rejects_invalid_text() -> None:
 def test_copies_range() -> None:
     with patch("builtins.input", side_effect=["8", "7"]):
         assert ask_integer_in_range("Cópias: ", 0, 7) == 7
+
+
+def test_constellation_retries_multiple_invalid_values() -> None:
+    with patch(
+        "builtins.input",
+        side_effect=["-1", "abc", "7", "6"],
+    ):
+        assert ask_constellation() == 6

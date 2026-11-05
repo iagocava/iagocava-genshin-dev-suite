@@ -18,13 +18,11 @@ def ask_non_negative_integer(message: str) -> int:
 
 
 def ask_constellation() -> int:
-    while True:
-        value = ask_non_negative_integer("Constelação desejada (0 a 6): ")
-
-        if value <= 6:
-            return value
-
-        print("A constelação deve estar entre C0 e C6.")
+    return ask_integer_in_range(
+        "Constelação desejada (0 a 6): ",
+        0,
+        6,
+    )
 
 
 def ask_guaranteed() -> bool:
