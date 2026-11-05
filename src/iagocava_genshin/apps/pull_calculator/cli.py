@@ -104,7 +104,22 @@ def format_pull_summary(
     return "\n".join(lines)
 
 
-def main() -> None:
+def ask_repeat() -> bool:
+    """Pergunta se o usuário deseja realizar outro cálculo."""
+
+    while True:
+        answer = input("\nDeseja realizar outro cálculo? (s/n): ").strip().lower()
+
+        if answer == "s":
+            return True
+
+        if answer == "n":
+            return False
+
+        print("Digite apenas 's' para sim ou 'n' para não.")
+
+
+def run_calculation() -> None:
     print()
     print("=== IagoCava Genshin Pull Calculator ===")
     print()
@@ -156,6 +171,19 @@ def main() -> None:
             intertwined_fates=intertwined_fates,
         )
     )
+
+
+def main() -> None:
+    """Executa a calculadora até o usuário solicitar a saída."""
+
+    while True:
+        run_calculation()
+
+        if not ask_repeat():
+            print()
+            print("Encerrando o Pull Calculator.")
+            print("Até a próxima!")
+            return
 
 
 if __name__ == "__main__":

@@ -6,7 +6,9 @@ from iagocava_genshin.apps.pull_calculator.cli import (
     ask_guaranteed,
     ask_integer_in_range,
     ask_non_negative_integer,
+    ask_repeat,
     format_pull_summary,
+    main,
 )
 from iagocava_genshin.core.calculator import PullSummary
 
@@ -143,3 +145,34 @@ def test_format_summary_without_pulls() -> None:
 
     assert "SEM TIROS DISPONÍVEIS" in result
     assert "0.00%" in result
+
+
+def test_ask_repeat_accepts_yes() -> None:
+    with patch("builtins.input", return_value="s"):
+        assert ask_repeat() is True
+
+
+def test_ask_repeat_accepts_no() -> None:
+    with patch("builtins.input", return_value="n"):
+        assert ask_repeat() is False
+
+
+def test_ask_repeat_retries_invalid_answer() -> None:
+    with patch("builtins.input", side_effect=["erro", "n"]):
+        assert ask_repeat() is False
+
+
+def test_main_repeats_calculation() -> None:
+    with patch("iagocava_genshin.apps.pull_calculator.cli.run_calculation") as mocked_calculation:
+        with patch("builtins.input", side_effect=["s", "n"]):
+            main()
+
+    assert mocked_calculation.call_count == 2
+
+
+def test_main_exits_after_one_calculation() -> None:
+    with patch("iagocava_genshin.apps.pull_calculator.cli.run_calculation") as mocked_calculation:
+        with patch("builtins.input", return_value="n"):
+            main()
+
+    mocked_calculation.assert_called_once()
