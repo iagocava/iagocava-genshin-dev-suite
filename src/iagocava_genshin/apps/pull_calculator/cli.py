@@ -1,4 +1,4 @@
-from iagocava_genshin.core.calculator import calculate_pull_summary
+from iagocava_genshin.core.calculator import PullSummary, calculate_pull_summary
 from iagocava_genshin.core.models import CharacterGoal
 from iagocava_genshin.core.pity import BannerState
 
@@ -62,6 +62,48 @@ def ask_integer_in_range(
         print(f"Erro: informe um número entre {minimum} e {maximum}.")
 
 
+def format_pull_summary(
+    summary: PullSummary,
+    primogems: int,
+    intertwined_fates: int,
+) -> str:
+    """Formata os resultados do Pull Calculator."""
+
+    lines = [
+        "=== IAGOCAVA | RESULTADO ===",
+        "",
+        "--- RECURSOS DISPONÍVEIS ---",
+        f"Primogemas: {primogems}",
+        f"Destinos Entrelaçados: {intertwined_fates}",
+        f"Total de tiros: {summary.total_pulls}",
+        "",
+        "--- ESTADO DO BANNER ---",
+        f"Pity atual: {summary.current_pity}",
+        f"Tiros até o hard pity: {summary.pulls_until_hard_pity}",
+        f"Garantia ativa: {'Sim' if summary.is_guaranteed else 'Não'}",
+        f"Chance de 5★ no próximo tiro: {summary.next_five_star_probability:.2%}",
+        "",
+        "--- OBJETIVO DO PERSONAGEM ---",
+        f"Constelação desejada: C{summary.target_constellation}",
+        f"Cópias necessárias no total: {summary.total_copies_required}",
+        f"Cópias possuídas: {summary.copies_owned}",
+        f"Cópias restantes: {summary.copies_needed}",
+    ]
+
+    if summary.copies_needed == 0:
+        lines.append("Situação da meta: JÁ ALCANÇADA")
+    elif summary.total_pulls == 0:
+        lines.append("Situação da meta: PENDENTE (SEM TIROS DISPONÍVEIS)")
+    else:
+        lines.append("Situação da meta: PENDENTE")
+
+    lines.append(
+        f"Probabilidade estimada de atingir a meta: {summary.goal_success_probability:.2%}"
+    )
+
+    return "\n".join(lines)
+
+
 def main() -> None:
     print()
     print("=== IagoCava Genshin Pull Calculator ===")
@@ -107,18 +149,13 @@ def main() -> None:
         return
 
     print()
-    print("=== Resultado ===")
-    print(f"Pulls disponíveis: {summary.total_pulls}")
-    print(f"Pity atual: {summary.current_pity}")
-    print(f"Pulls até o hard pity: {summary.pulls_until_hard_pity}")
-    print(f"Próximo 5★ garantido: {'Sim' if summary.is_guaranteed else 'Não'}")
-    print(f"Chance estimada do próximo 5★: {summary.next_five_star_probability:.2%}")
-    print()
-    print(f"Meta: C{summary.target_constellation}")
-    print(f"Cópias necessárias no total: {summary.total_copies_required}")
-    print(f"Cópias já possuídas: {summary.copies_owned}")
-    print(f"Cópias restantes: {summary.copies_needed}")
-    print(f"Probabilidade estimada de atingir a meta: {summary.goal_success_probability:.2%}")
+    print(
+        format_pull_summary(
+            summary=summary,
+            primogems=primogems,
+            intertwined_fates=intertwined_fates,
+        )
+    )
 
 
 if __name__ == "__main__":

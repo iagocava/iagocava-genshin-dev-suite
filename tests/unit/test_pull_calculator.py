@@ -1,8 +1,5 @@
-from unittest.mock import patch
-
 import pytest
 
-from iagocava_genshin.apps.pull_calculator.cli import ask_constellation
 from iagocava_genshin.core.calculator import calculate_pull_summary
 from iagocava_genshin.core.models import CharacterGoal
 from iagocava_genshin.core.pity import BannerState
@@ -96,14 +93,6 @@ def test_completed_goal_has_certain_success_probability() -> None:
 
     assert summary.copies_needed == 0
     assert summary.goal_success_probability == 1.0
-
-
-def test_constellation_retries_multiple_invalid_values() -> None:
-    with patch(
-        "builtins.input",
-        side_effect=["-1", "abc", "7", "6"],
-    ):
-        assert ask_constellation() == 6
 
 
 def test_c6_with_six_copies_and_zero_pulls() -> None:

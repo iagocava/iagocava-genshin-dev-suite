@@ -1,3 +1,4 @@
+from dataclasses import replace
 from unittest.mock import patch
 
 from iagocava_genshin.apps.pull_calculator.cli import (
@@ -5,7 +6,9 @@ from iagocava_genshin.apps.pull_calculator.cli import (
     ask_guaranteed,
     ask_integer_in_range,
     ask_non_negative_integer,
+    format_pull_summary,
 )
+from iagocava_genshin.core.calculator import PullSummary
 
 
 def test_ask_non_negative_integer_accepts_valid_value() -> None:
@@ -84,3 +87,59 @@ def test_constellation_retries_multiple_invalid_values() -> None:
         side_effect=["-1", "abc", "7", "6"],
     ):
         assert ask_constellation() == 6
+
+
+def _example_summary() -> PullSummary:
+    return PullSummary(
+        total_pulls=120,
+        current_pity=75,
+        is_guaranteed=True,
+        pulls_until_hard_pity=15,
+        next_five_star_probability=0.186,
+        target_constellation=2,
+        total_copies_required=3,
+        copies_owned=1,
+        copies_needed=2,
+        goal_success_probability=0.45,
+    )
+
+
+def test_format_summary_pending_goal() -> None:
+    result = format_pull_summary(
+        _example_summary(),
+        primogems=16000,
+        intertwined_fates=20,
+    )
+
+    assert "Primogemas: 16000" in result
+    assert "Total de tiros: 120" in result
+    assert "Cópias restantes: 2" in result
+    assert "Situação da meta: PENDENTE" in result
+    assert "45.00%" in result
+
+
+def test_format_summary_completed_goal() -> None:
+    summary = replace(
+        _example_summary(),
+        copies_owned=3,
+        copies_needed=0,
+        goal_success_probability=1.0,
+    )
+
+    result = format_pull_summary(summary, 16000, 20)
+
+    assert "JÁ ALCANÇADA" in result
+    assert "100.00%" in result
+
+
+def test_format_summary_without_pulls() -> None:
+    summary = replace(
+        _example_summary(),
+        total_pulls=0,
+        goal_success_probability=0.0,
+    )
+
+    result = format_pull_summary(summary, 0, 0)
+
+    assert "SEM TIROS DISPONÍVEIS" in result
+    assert "0.00%" in result
